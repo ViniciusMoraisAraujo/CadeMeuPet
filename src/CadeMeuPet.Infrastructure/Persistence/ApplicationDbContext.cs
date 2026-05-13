@@ -18,6 +18,7 @@ public sealed class ApplicationDbContext : DbContext
     }
 
     public Guid CurrentTenantId => _tenantProvider.TenantId;
+    public bool HasTenant => _tenantProvider.HasTenant;
 
     public DbSet<Tutor> Tutors => Set<Tutor>();
     public DbSet<Pet> Pets => Set<Pet>();
@@ -31,10 +32,10 @@ public sealed class ApplicationDbContext : DbContext
 
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
 
-        modelBuilder.Entity<Pet>().HasQueryFilter(entity => entity.TenantId == CurrentTenantId);
-        modelBuilder.Entity<QrCode>().HasQueryFilter(entity => entity.TenantId == CurrentTenantId);
-        modelBuilder.Entity<ScanHistory>().HasQueryFilter(entity => entity.TenantId == CurrentTenantId);
-        modelBuilder.Entity<Notification>().HasQueryFilter(entity => entity.TenantId == CurrentTenantId);
+        modelBuilder.Entity<Pet>().HasQueryFilter(entity => HasTenant && entity.TenantId == CurrentTenantId);
+        modelBuilder.Entity<QrCode>().HasQueryFilter(entity => HasTenant && entity.TenantId == CurrentTenantId);
+        modelBuilder.Entity<ScanHistory>().HasQueryFilter(entity => HasTenant && entity.TenantId == CurrentTenantId);
+        modelBuilder.Entity<Notification>().HasQueryFilter(entity => HasTenant && entity.TenantId == CurrentTenantId);
 
         foreach (var entityType in modelBuilder.Model.GetEntityTypes().Where(ImplementsTenantScopedEntity))
         {
