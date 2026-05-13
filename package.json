@@ -1,0 +1,14 @@
+{
+  "name": "cade-meu-pet-api",
+  "version": "0.1.0",
+  "description": "API HTTP para o fluxo principal do sistema CadeMeuPet.",
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
