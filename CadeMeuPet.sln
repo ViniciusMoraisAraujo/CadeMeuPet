@@ -2,29 +2,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CadeMeuPet.Domain", "src\CadeMeuPet.Domain\CadeMeuPet.Domain.csproj", "{7A4CCDC8-A672-43BA-AB5C-D9FB8B37E56B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CadeMeuPet.Domain", "src\CadeMeuPet.Domain\CadeMeuPet.Domain.csproj", "{A8A91921-8133-4AE9-BBF7-F258F91F4B72}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CadeMeuPet.Application", "src\CadeMeuPet.Application\CadeMeuPet.Application.csproj", "{8D7B3DD6-2195-4C96-92EF-0F1602F2E659}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CadeMeuPet.Application", "src\CadeMeuPet.Application\CadeMeuPet.Application.csproj", "{2564926E-9FBB-43D6-8094-E8DE2F2B41CD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CadeMeuPet.Infrastructure", "src\CadeMeuPet.Infrastructure\CadeMeuPet.Infrastructure.csproj", "{AA5596B0-AF31-49E0-BD62-F0EC13E11C7D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CadeMeuPet.Infrastructure", "src\CadeMeuPet.Infrastructure\CadeMeuPet.Infrastructure.csproj", "{99C9C8D1-F561-433B-99F0-8F76F7E4E7ED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CadeMeuPet.Api", "src\CadeMeuPet.Api\CadeMeuPet.Api.csproj", "{2765A257-77A7-4F0C-AFD4-49510FBE10DD8}"
 EndProject
 Global
-	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Any CPU = Debug|Any CPU
-		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{7A4CCDC8-A672-43BA-AB5C-D9FB8B37E56B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7A4CCDC8-A672-43BA-AB5C-D9FB8B37E56B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7A4CCDC8-A672-43BA-AB5C-D9FB8B37E56B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7A4CCDC8-A672-43BA-AB5C-D9FB8B37E56B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8D7B3DD6-2195-4C96-92EF-0F1602F2E659}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8D7B3DD6-2195-4C96-92EF-0F1602F2E659}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8D7B3DD6-2195-4C96-92EF-0F1602F2E659}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8D7B3DD6-2195-4C96-92EF-0F1602F2E659}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AA5596B0-AF31-49E0-BD62-F0EC13E11C7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AA5596B0-AF31-49E0-BD62-F0EC13E11C7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AA5596B0-AF31-49E0-BD62-F0EC13E11C7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AA5596B0-AF31-49E0-BD62-F0EC13E11C7D}.Release|Any CPU.Build.0 = Release|Any CPU
-	EndGlobalSection
 EndGlobal
