@@ -2,8 +2,6 @@ using CadeMeuPet.Application.Common.Tenancy;
 using CadeMeuPet.Domain.Common;
 using CadeMeuPet.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace CadeMeuPet.Infrastructure.Persistence;
 
@@ -68,7 +66,7 @@ public sealed class ApplicationDbContext : DbContext
         return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
     }
 
-    private static bool ImplementsTenantScopedEntity(IMutableEntityType entityType)
+    private static bool ImplementsTenantScopedEntity(Microsoft.EntityFrameworkCore.Metadata.IMutableEntityType entityType)
     {
         return typeof(ITenantScopedEntity).IsAssignableFrom(entityType.ClrType);
     }
@@ -90,7 +88,7 @@ public sealed class ApplicationDbContext : DbContext
         }
     }
 
-    private void SetTenantOnAddedEntity(EntityEntry<ITenantScopedEntity> entry)
+    private void SetTenantOnAddedEntity(Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<ITenantScopedEntity> entry)
     {
         var currentTenantId = CurrentTenantId;
 

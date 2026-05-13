@@ -1,5 +1,4 @@
 using System.Security.Claims;
-using Microsoft.AspNetCore.Authentication;
 
 namespace CadeMeuPet.Infrastructure.Tenancy;
 
@@ -12,10 +11,10 @@ public static class TenantIdResolver
             return null;
         }
 
-        var claimValue = user.FindFirstValue(TenantProvider.TenantClaimType)
-            ?? user.FindFirstValue(TenantProvider.TutorClaimType)
-            ?? user.FindFirstValue(ClaimTypes.NameIdentifier)
-            ?? user.FindFirstValue("sub");
+        var claimValue = user.FindFirst(TenantProvider.TenantClaimType)?.Value
+            ?? user.FindFirst(TenantProvider.TutorClaimType)?.Value
+            ?? user.FindFirst(ClaimTypes.NameIdentifier)?.Value
+            ?? user.FindFirst("sub")?.Value;
 
         return Guid.TryParse(claimValue, out var tenantId) ? tenantId : null;
     }
