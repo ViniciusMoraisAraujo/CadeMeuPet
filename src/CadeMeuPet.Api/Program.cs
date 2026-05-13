@@ -1,29 +1,16 @@
-using CadeMeuPet.Infrastructure.Persistence;
-using Microsoft.EntityFrameworkCore;
+using CadeMeuPet.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
-    ?? throw new InvalidOperationException("Connection string 'DefaultConnection' was not found.");
-
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(connectionString));
-
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddAuthentication();
+builder.Services.AddAuthorization();
+builder.Services.AddInfrastructure(builder.Configuration);
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseAuthentication();
+app.UseAuthorization();
 
-app.UseHttpsRedirection();
-
-app.MapGet("/health", () => Results.Ok(new { status = "Healthy" }))
-    .WithName("HealthCheck")
-    .WithOpenApi();
+app.MapGet("/health", () => Results.Ok(new { status = "healthy" }));
 
 app.Run();
