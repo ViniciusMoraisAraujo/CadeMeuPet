@@ -1,6 +1,4 @@
-using System.Security.Claims;
 using CadeMeuPet.Application.Common.Tenancy;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 
 namespace CadeMeuPet.Infrastructure.Tenancy;
@@ -36,18 +34,6 @@ public sealed class TenantProvider : ITenantProvider
 
     private Guid? ResolveTenantId()
     {
-        var user = _httpContextAccessor.HttpContext?.User;
-
-        if (user?.Identity?.IsAuthenticated != true)
-        {
-            return null;
-        }
-
-        var claimValue = user.FindFirstValue(TenantClaimType)
-            ?? user.FindFirstValue(TutorClaimType)
-            ?? user.FindFirstValue(ClaimTypes.NameIdentifier)
-            ?? user.FindFirstValue("sub");
-
-        return Guid.TryParse(claimValue, out var tenantId) ? tenantId : null;
+        return TenantIdResolver.ResolveTenantId(_httpContextAccessor.HttpContext?.User);
     }
 }
