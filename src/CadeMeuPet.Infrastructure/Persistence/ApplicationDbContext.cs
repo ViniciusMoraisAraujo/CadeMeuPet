@@ -2,8 +2,6 @@ using CadeMeuPet.Application.Common.Tenancy;
 using CadeMeuPet.Domain.Common;
 using CadeMeuPet.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace CadeMeuPet.Infrastructure.Persistence;
 
@@ -18,7 +16,9 @@ public sealed class ApplicationDbContext : DbContext
     }
 
     public Guid CurrentTenantId => _tenantProvider.TenantId;
+    public bool HasTenant => _tenantProvider.HasTenant;
 
+    public DbSet<Tutor> Tutors => Set<Tutor>();
     public DbSet<Pet> Pets => Set<Pet>();
     public DbSet<QrCode> QrCodes => Set<QrCode>();
     public DbSet<ScanHistory> ScanHistories => Set<ScanHistory>();
@@ -28,34 +28,18 @@ public sealed class ApplicationDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<Pet>().HasQueryFilter(entity => entity.TenantId == CurrentTenantId);
-        modelBuilder.Entity<QrCode>().HasQueryFilter(entity => entity.TenantId == CurrentTenantId);
-        modelBuilder.Entity<ScanHistory>().HasQueryFilter(entity => entity.TenantId == CurrentTenantId);
-        modelBuilder.Entity<Notification>().HasQueryFilter(entity => entity.TenantId == CurrentTenantId);
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+
+        modelBuilder.Entity<Pet>().HasQueryFilter(entity => HasTenant && entity.TenantId == CurrentTenantId);
+        modelBuilder.Entity<QrCode>().HasQueryFilter(entity => HasTenant && entity.TenantId == CurrentTenantId);
+        modelBuilder.Entity<ScanHistory>().HasQueryFilter(entity => HasTenant && entity.TenantId == CurrentTenantId);
+        modelBuilder.Entity<Notification>().HasQueryFilter(entity => HasTenant && entity.TenantId == CurrentTenantId);
 
         foreach (var entityType in modelBuilder.Model.GetEntityTypes().Where(ImplementsTenantScopedEntity))
         {
             modelBuilder.Entity(entityType.ClrType).HasIndex(nameof(ITenantScopedEntity.TenantId));
             modelBuilder.Entity(entityType.ClrType).Property<Guid>(nameof(ITenantScopedEntity.TenantId)).IsRequired();
         }
-
-        modelBuilder.Entity<QrCode>()
-            .HasOne(qrCode => qrCode.Pet)
-            .WithMany()
-            .HasForeignKey(qrCode => qrCode.PetId)
-            .OnDelete(DeleteBehavior.Restrict);
-
-        modelBuilder.Entity<ScanHistory>()
-            .HasOne(scanHistory => scanHistory.QrCode)
-            .WithMany()
-            .HasForeignKey(scanHistory => scanHistory.QrCodeId)
-            .OnDelete(DeleteBehavior.Restrict);
-
-        modelBuilder.Entity<Notification>()
-            .HasOne(notification => notification.Pet)
-            .WithMany()
-            .HasForeignKey(notification => notification.PetId)
-            .OnDelete(DeleteBehavior.Restrict);
     }
 
     public override int SaveChanges()
@@ -82,7 +66,7 @@ public sealed class ApplicationDbContext : DbContext
         return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
     }
 
-    private static bool ImplementsTenantScopedEntity(IMutableEntityType entityType)
+    private static bool ImplementsTenantScopedEntity(Microsoft.EntityFrameworkCore.Metadata.IMutableEntityType entityType)
     {
         return typeof(ITenantScopedEntity).IsAssignableFrom(entityType.ClrType);
     }
@@ -104,7 +88,7 @@ public sealed class ApplicationDbContext : DbContext
         }
     }
 
-    private void SetTenantOnAddedEntity(EntityEntry<ITenantScopedEntity> entry)
+    private void SetTenantOnAddedEntity(Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<ITenantScopedEntity> entry)
     {
         var currentTenantId = CurrentTenantId;
 

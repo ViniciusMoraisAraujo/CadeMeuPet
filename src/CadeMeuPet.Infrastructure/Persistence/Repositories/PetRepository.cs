@@ -13,9 +13,9 @@ public sealed class PetRepository : IPetRepository
         _dbContext = dbContext;
     }
 
-    public Task<Pet?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    public async Task<Pet?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        return _dbContext.Pets.SingleOrDefaultAsync(pet => pet.Id == id, cancellationToken);
+        return await _dbContext.Pets.FindAsync(new object[] { id }, cancellationToken);
     }
 
     public async Task<IReadOnlyList<Pet>> ListAsync(CancellationToken cancellationToken = default)
