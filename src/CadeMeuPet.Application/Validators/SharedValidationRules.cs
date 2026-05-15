@@ -4,7 +4,7 @@ namespace CadeMeuPet.Application.Validators;
 
 internal static class SharedValidationRules
 {
-    private const string PhonePattern = @"^\+?[0-9 ()-]{10,20}$";
+    private const string PhonePattern = @"^\+?(?=(?:\D*\d){10,11}\D*$)[0-9 ()-]{10,20}$";
 
     internal static IRuleBuilderOptions<T, string?> NomePessoa<T>(this IRuleBuilderInitial<T, string?> ruleBuilder) =>
         ruleBuilder
