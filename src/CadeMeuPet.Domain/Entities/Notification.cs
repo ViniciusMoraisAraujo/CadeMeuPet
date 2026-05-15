@@ -1,47 +1,22 @@
-using CadeMeuPet.Domain.Enums;
+using CadeMeuPet.Domain.Common;
 
 namespace CadeMeuPet.Domain.Entities;
 
-public sealed class Notification
+public sealed class Notification : ITenantScopedEntity
 {
-    private Notification()
-    {
-        Tutor = null!;
-        Title = string.Empty;
-        Message = string.Empty;
-    }
+    public Guid Id { get; set; }
+    public Guid TenantId { get; set; }
+    public Guid TutorId { get; set; }
+    public Guid? PetId { get; set; }
+    public Guid? ScanHistoryId { get; set; }
+    public string? Channel { get; set; }
+    public string? Title { get; set; }
+    public string Message { get; set; } = string.Empty;
+    public bool IsRead { get; set; }
+    public DateTimeOffset CreatedAt { get; set; }
+    public DateTimeOffset? SentAt { get; set; }
 
-    public Notification(Tutor tutor, NotificationType type, string title, string message, Guid? petId = null)
-    {
-        ArgumentNullException.ThrowIfNull(tutor);
-        ArgumentException.ThrowIfNullOrWhiteSpace(title);
-        ArgumentException.ThrowIfNullOrWhiteSpace(message);
-
-        Id = Guid.NewGuid();
-        TutorId = tutor.Id;
-        Tutor = tutor;
-        PetId = petId;
-        Type = type;
-        Title = title;
-        Message = message;
-        CreatedAtUtc = DateTimeOffset.UtcNow;
-        IsRead = false;
-    }
-
-    public Guid Id { get; private set; }
-    public Guid TutorId { get; private set; }
-    public Tutor Tutor { get; private set; }
-    public Guid? PetId { get; private set; }
-    public NotificationType Type { get; private set; }
-    public string Title { get; private set; }
-    public string Message { get; private set; }
-    public DateTimeOffset CreatedAtUtc { get; private set; }
-    public DateTimeOffset? ReadAtUtc { get; private set; }
-    public bool IsRead { get; private set; }
-
-    public void MarkAsRead()
-    {
-        IsRead = true;
-        ReadAtUtc = DateTimeOffset.UtcNow;
-    }
+    public Tutor Tutor { get; set; } = null!;
+    public Pet? Pet { get; set; }
+    public ScanHistory? ScanHistory { get; set; }
 }

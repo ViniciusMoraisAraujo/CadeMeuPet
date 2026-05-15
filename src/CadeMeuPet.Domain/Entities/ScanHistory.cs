@@ -1,28 +1,19 @@
+using CadeMeuPet.Domain.Common;
+
 namespace CadeMeuPet.Domain.Entities;
 
-public sealed class ScanHistory
+public sealed class ScanHistory : ITenantScopedEntity
 {
-    private ScanHistory()
-    {
-        Pet = null!;
-    }
+    public Guid Id { get; set; }
+    public Guid TenantId { get; set; }
+    public Guid PetId { get; set; }
+    public Guid? QrCodeId { get; set; }
+    public string? IpAddress { get; set; }
+    public string? UserAgent { get; set; }
+    public decimal? Latitude { get; set; }
+    public decimal? Longitude { get; set; }
+    public DateTimeOffset ScannedAt { get; set; }
 
-    internal ScanHistory(Pet pet, string? approximateIpAddress, string? userAgent)
-    {
-        ArgumentNullException.ThrowIfNull(pet);
-
-        Id = Guid.NewGuid();
-        PetId = pet.Id;
-        Pet = pet;
-        ScannedAtUtc = DateTimeOffset.UtcNow;
-        ApproximateIpAddress = approximateIpAddress;
-        UserAgent = userAgent;
-    }
-
-    public Guid Id { get; private set; }
-    public Guid PetId { get; private set; }
-    public Pet Pet { get; private set; }
-    public DateTimeOffset ScannedAtUtc { get; private set; }
-    public string? ApproximateIpAddress { get; private set; }
-    public string? UserAgent { get; private set; }
+    public Pet Pet { get; set; } = null!;
+    public QrCode? QrCode { get; set; }
 }

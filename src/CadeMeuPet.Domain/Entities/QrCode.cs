@@ -1,38 +1,15 @@
+using CadeMeuPet.Domain.Common;
+
 namespace CadeMeuPet.Domain.Entities;
 
-public sealed class QrCode
+public sealed class QrCode : ITenantScopedEntity
 {
-    private QrCode()
-    {
-        PublicCode = string.Empty;
-        DestinationUrl = string.Empty;
-        Pet = null!;
-    }
+    public Guid Id { get; set; }
+    public Guid TenantId { get; set; }
+    public Guid PetId { get; set; }
+    public string Code { get; set; } = string.Empty;
+    public bool IsActive { get; set; } = true;
+    public DateTimeOffset CreatedAt { get; set; }
 
-    internal QrCode(Pet pet, string destinationUrl)
-    {
-        ArgumentNullException.ThrowIfNull(pet);
-        ArgumentException.ThrowIfNullOrWhiteSpace(destinationUrl);
-
-        Id = Guid.NewGuid();
-        PetId = pet.Id;
-        Pet = pet;
-        PublicCode = PublicIdentifier.Create();
-        DestinationUrl = destinationUrl;
-        CreatedAtUtc = DateTimeOffset.UtcNow;
-        IsActive = true;
-    }
-
-    public Guid Id { get; private set; }
-    public Guid PetId { get; private set; }
-    public Pet Pet { get; private set; }
-    public string PublicCode { get; private set; }
-    public string DestinationUrl { get; private set; }
-    public DateTimeOffset CreatedAtUtc { get; private set; }
-    public bool IsActive { get; private set; }
-
-    public void Deactivate()
-    {
-        IsActive = false;
-    }
+    public Pet Pet { get; set; } = null!;
 }
