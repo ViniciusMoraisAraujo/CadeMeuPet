@@ -1,0 +1,106 @@
+using CadeMeuPet.Application.Common.Tenancy;
+using CadeMeuPet.Domain.Common;
+using CadeMeuPet.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
+
+namespace CadeMeuPet.Infrastructure.Persistence;
+
+public sealed class ApplicationDbContext : DbContext
+{
+    private readonly ITenantProvider _tenantProvider;
+
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, ITenantProvider tenantProvider)
+        : base(options)
+    {
+        _tenantProvider = tenantProvider;
+    }
+
+    public Guid CurrentTenantId => _tenantProvider.TenantId;
+    public bool HasTenant => _tenantProvider.HasTenant;
+
+    public DbSet<Tutor> Tutors => Set<Tutor>();
+    public DbSet<Pet> Pets => Set<Pet>();
+    public DbSet<QrCode> QrCodes => Set<QrCode>();
+    public DbSet<ScanHistory> ScanHistories => Set<ScanHistory>();
+    public DbSet<Notification> Notifications => Set<Notification>();
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+
+        modelBuilder.Entity<Pet>().HasQueryFilter(entity => HasTenant && entity.TenantId == CurrentTenantId);
+        modelBuilder.Entity<QrCode>().HasQueryFilter(entity => HasTenant && entity.TenantId == CurrentTenantId);
+        modelBuilder.Entity<ScanHistory>().HasQueryFilter(entity => HasTenant && entity.TenantId == CurrentTenantId);
+        modelBuilder.Entity<Notification>().HasQueryFilter(entity => HasTenant && entity.TenantId == CurrentTenantId);
+
+        foreach (var entityType in modelBuilder.Model.GetEntityTypes().Where(ImplementsTenantScopedEntity))
+        {
+            modelBuilder.Entity(entityType.ClrType).HasIndex(nameof(ITenantScopedEntity.TenantId));
+            modelBuilder.Entity(entityType.ClrType).Property<Guid>(nameof(ITenantScopedEntity.TenantId)).IsRequired();
+        }
+    }
+
+    public override int SaveChanges()
+    {
+        ApplyTenantToTrackedEntities();
+        return base.SaveChanges();
+    }
+
+    public override int SaveChanges(bool acceptAllChangesOnSuccess)
+    {
+        ApplyTenantToTrackedEntities();
+        return base.SaveChanges(acceptAllChangesOnSuccess);
+    }
+
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        ApplyTenantToTrackedEntities();
+        return base.SaveChangesAsync(cancellationToken);
+    }
+
+    public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
+    {
+        ApplyTenantToTrackedEntities();
+        return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+    }
+
+    private static bool ImplementsTenantScopedEntity(Microsoft.EntityFrameworkCore.Metadata.IMutableEntityType entityType)
+    {
+        return typeof(ITenantScopedEntity).IsAssignableFrom(entityType.ClrType);
+    }
+
+    private void ApplyTenantToTrackedEntities()
+    {
+        foreach (var entry in ChangeTracker.Entries<ITenantScopedEntity>())
+        {
+            if (entry.State == EntityState.Added)
+            {
+                SetTenantOnAddedEntity(entry);
+                continue;
+            }
+
+            if (entry.State == EntityState.Modified)
+            {
+                entry.Property(entity => entity.TenantId).IsModified = false;
+            }
+        }
+    }
+
+    private void SetTenantOnAddedEntity(Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<ITenantScopedEntity> entry)
+    {
+        var currentTenantId = CurrentTenantId;
+
+        if (entry.Entity.TenantId == Guid.Empty)
+        {
+            entry.Entity.TenantId = currentTenantId;
+            return;
+        }
+
+        if (entry.Entity.TenantId != currentTenantId)
+        {
+            throw new InvalidOperationException("Cannot create an entity for a tenant different from the current tenant.");
+        }
+    }
+}

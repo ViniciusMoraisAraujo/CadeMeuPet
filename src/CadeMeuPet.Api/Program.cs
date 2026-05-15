@@ -3,15 +3,23 @@ using CadeMeuPet.Application;
 using CadeMeuPet.Application.Commands.Auth;
 using CadeMeuPet.Application.Commands.Pets;
 using CadeMeuPet.Application.Requests.Auth;
+using CadeMeuPet.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddAuthentication();
+builder.Services.AddAuthorization();
+builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplication();
 builder.Services.AddProblemDetails();
 
 var app = builder.Build();
 
 app.UseValidationErrors();
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapGet("/health", () => Results.Ok(new { status = "healthy" }));
 
 var api = app.MapGroup("/api")
     .WithRequestValidation();

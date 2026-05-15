@@ -9,5 +9,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CadeMeuPet.Application\CadeMeuPet.Application.csproj" />
+    <ProjectReference Include="..\CadeMeuPet.Infrastructure\CadeMeuPet.Infrastructure.csproj" />
   </ItemGroup>
 </Project>
