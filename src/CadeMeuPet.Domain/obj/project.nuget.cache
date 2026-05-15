@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "eVc3I5w4tTI=",
+  "success": true,
+  "projectFilePath": "/home/runner/work/CadeMeuPet/CadeMeuPet/src/CadeMeuPet.Domain/CadeMeuPet.Domain.csproj",
+  "expectedPackageFiles": [
+    "/tmp/codeql-scratch-2933001282f02a70/dbs/csharp/working/packages/microsoft.netcore.app.ref/8.0.25/microsoft.netcore.app.ref.8.0.25.nupkg.sha512",
+    "/tmp/codeql-scratch-2933001282f02a70/dbs/csharp/working/packages/microsoft.aspnetcore.app.ref/8.0.25/microsoft.aspnetcore.app.ref.8.0.25.nupkg.sha512"
+  ],
+  "logs": []
+}
