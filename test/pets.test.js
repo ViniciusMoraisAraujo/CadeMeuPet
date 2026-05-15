@@ -49,6 +49,12 @@ describe('pet HTTP API', () => {
     assert.equal(response.body.error, 'Missing bearer token');
   });
 
+  it('rejects bearer tokens with extra JWT segments', async () => {
+    const response = await requestJson(baseUrl, '/api/pets', { token: `${token}.extra` });
+    assert.equal(response.status, 401);
+    assert.equal(response.body.error, 'Invalid bearer token');
+  });
+
   it('supports the main admin CRUD flow', async () => {
     const createResponse = await requestJson(baseUrl, '/api/pets', {
       method: 'POST',

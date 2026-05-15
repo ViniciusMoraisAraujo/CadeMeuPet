@@ -33,7 +33,13 @@ export const signAdminToken = (subject = 'admin') => {
 };
 
 export const verifyAdminToken = (token) => {
-  const [headerSegment, payloadSegment, signature] = token.split('.');
+  const segments = token.split('.');
+
+  if (segments.length !== 3) {
+    throw new Error('Malformed token');
+  }
+
+  const [headerSegment, payloadSegment, signature] = segments;
 
   if (!headerSegment || !payloadSegment || !signature) {
     throw new Error('Malformed token');
