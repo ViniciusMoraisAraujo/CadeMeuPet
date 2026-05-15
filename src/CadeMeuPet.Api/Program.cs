@@ -25,7 +25,7 @@ var api = app.MapGroup("/api")
     .WithRequestValidation();
 
 api.MapPost("/tutores", (RegisterTutorCommand command) =>
-    Results.Created("/api/tutores", new { message = "Tutor cadastrado com sucesso.", tutor = command }));
+    Results.Created("/api/tutores", new { message = "Tutor cadastrado com sucesso." }));
 
 api.MapPost("/auth/login", (LoginRequest request) =>
     Results.Ok(new { message = "Login válido.", login = request.Email }));
