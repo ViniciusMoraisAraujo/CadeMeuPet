@@ -6,6 +6,8 @@ coverage/
 .env
 *.log
 
+**/bin/
+**/obj/
 # .NET build artifacts
 bin/
 obj/
