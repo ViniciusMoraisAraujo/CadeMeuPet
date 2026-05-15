@@ -42,6 +42,7 @@ public sealed class ValidationExceptionMiddleware
         };
 
         context.Response.StatusCode = StatusCodes.Status400BadRequest;
+        context.Response.ContentType = "application/problem+json";
         await context.Response.WriteAsJsonAsync(problemDetails);
     }
 }
