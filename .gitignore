@@ -1,3 +1,5 @@
+bin/
+obj/
 node_modules/
 dist/
 coverage/
@@ -6,3 +8,6 @@ coverage/
 
 **/bin/
 **/obj/
+# .NET build artifacts
+bin/
+obj/
