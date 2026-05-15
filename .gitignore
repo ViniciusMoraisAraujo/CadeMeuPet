@@ -5,3 +5,7 @@ dist/
 coverage/
 .env
 *.log
+
+# .NET build artifacts
+bin/
+obj/

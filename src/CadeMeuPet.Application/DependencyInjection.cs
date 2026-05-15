@@ -1,4 +1,5 @@
-using CadeMeuPet.Application.Services;
+using CadeMeuPet.Application.Abstractions;
+using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CadeMeuPet.Application;
@@ -7,10 +8,7 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
-        services.AddScoped<IPetService, PetService>();
-        services.AddScoped<ITutorService, TutorService>();
-        services.AddScoped<IQrCodeService, QrCodeService>();
-        services.AddScoped<IScanHistoryService, ScanHistoryService>();
+        services.AddValidatorsFromAssemblyContaining<ApplicationAssemblyReference>();
 
         return services;
     }
