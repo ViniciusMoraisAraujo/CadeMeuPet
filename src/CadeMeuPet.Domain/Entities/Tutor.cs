@@ -1,9 +1,11 @@
 namespace CadeMeuPet.Domain.Entities;
 
-public sealed class Tutor
+public sealed class Tutor : Entity, ITenantEntity
 {
-    public Guid Id { get; set; }
+    public Guid TenantId { get; set; }
+
     public string Name { get; set; } = string.Empty;
+
     public string Email { get; set; } = string.Empty;
     public string PhoneNumber { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; }

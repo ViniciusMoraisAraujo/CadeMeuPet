@@ -1,8 +1,11 @@
+bin/
+obj/
 node_modules/
 dist/
 coverage/
 .env
 *.log
 
-**/bin/
-**/obj/
+# .NET build artifacts
+bin/
+obj/
